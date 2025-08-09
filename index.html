@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWS.code Enhanced - Professional Code Editor</title>
+    <meta name="description" content="Professional code editor with beautiful Silver & Gold theme. Monaco Editor powered, open source, and free to use.">
+    <meta name="keywords" content="code editor, monaco editor, online editor, javascript, html, css, programming">
+    <meta name="author" content="Jonathan South">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="JWS.code Enhanced - Professional Code Editor">
+    <meta property="og:description" content="Beautiful, professional code editor with Silver & Gold theme. Works in your browser!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourusername.github.io/jws-code-enhanced">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='%23ffd700'/><path d='M12 16L20 24L28 16' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+    
+    <!-- Monaco Editor -->
+    <script src="https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js"></script>
+    
+    <!-- Styles -->
+    <style>
+        :root {
+            --bg-primary: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 50%, #e9ecef 100%);
+            --bg-secondary: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #f1f3f4 100%);
+            --bg-overlay: linear-gradient(135deg, #ffffff 0%, #ffd700 10%, #ffffff 50%, #c0c0c0 90%, #ffffff 100%);
+            --bg-accent: linear-gradient(135deg, #ffd700 0%, #c9b037 50%, #b8860b 100%);
+            --bg-sidebar: linear-gradient(135deg, #f8f9fa 0%, #ffffff 25%, #ffd700 50%, #ffffff 75%, #f1f3f4 100%);
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --border-accent: #d4af37;
+            --accent-primary: #d4af37;
+            --shadow-gold: 0 4px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-accent);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-gold);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: var(--bg-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .loading-progress {
+            width: 200px;
+            height: 4px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .loading-bar {
+            height: 100%;
+            background: var(--bg-accent);
+            width: 0%;
+            border-radius: 2px;
+            animation: loadingBar 3s ease-in-out infinite;
+        }
+
+        @keyframes loadingBar {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 1rem;
+            background: var(--bg-overlay);
+            border-bottom: 2px solid var(--border-accent);
+            height: 50px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.15);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: var(--bg-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid var(--border-accent);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn:hover {
+            background: var(--bg-accent);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .main-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            overflow: hidden;
+            gap: 1px;
+            background: var(--border-accent);
+        }
+
+        .sidebar {
+            background: var(--bg-sidebar);
+            border-right: 2px solid var(--border-accent);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-accent);
+            font-weight: 600;
+            background: var(--bg-overlay);
+        }
+
+        .file-list {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 2px;
+        }
+
+        .file-item:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        .file-item.active {
+            background: var(--bg-accent);
+            color: white;
+        }
+
+        .editor-section {
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+        }
+
+        .tab-bar {
+            display: flex;
+            align-items: center;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-accent);
+            height: 40px;
+            padding: 0 0.5rem;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .tab.active {
+            background: white;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--accent-primary);
+        }
+
+        .tab-close {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.6;
+            transition: all 0.2s ease;
+        }
+
+        .tab-close:hover {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            opacity: 1;
+        }
+
+        .editor-container {
+            flex: 1;
+            position: relative;
+            background: white;
+        }
+
+        .editor {
+            width: 100%;
+            height: 100%;
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.3rem 1rem;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-accent);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            height: 28px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .notification {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10001;
+            max-width: 350px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success { background: #38a169; }
+        .notification.error { background: #e53e3e; }
+        .notification.info { background: #3182ce; }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="logo">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                <path d="M12 16L20 24L28 16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="loading-text">JWS.code Enhanced</div>
+        <div class="loading-progress">
+            <div class="loading-bar"></div>
+        </div>
+        <div style="color: var(--text-muted); text-align: center;">
+            Loading Monaco Editor...<br>
+            <small>Professional code editor with Silver & Gold theme</small>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="topbar">
+        <div class="brand">
+            <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
+                <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                <path d="M12 16L20 24L28 16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#ffd700"/>
+                        <stop offset="50%" style="stop-color:#d4af37"/>
+                        <stop offset="100%" style="stop-color:#b8860b"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <span>JWS.code Enhanced</span>
+        </div>
+        
+        <div class="toolbar">
+            <button class="btn" id="newFile">📄 New</button>
+            <button class="btn" id="openFile">📂 Open</button>
+            <button class="btn" id="saveFile">💾 Save</button>
+            <button class="btn" id="formatCode">🎨 Format</button>
+            <select class="btn" id="themeSelect">
+                <option value="vs">🌟 Silver Gold</option>
+                <option value="vs-dark">🌙 Dark</option>
+                <option value="hc-black">🔆 High Contrast</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                📁 Project Files
+            </div>
+            <div class="file-list" id="fileList">
+                <div class="file-item active" data-file="welcome.html">
+                    <span>🌟</span>
+                    <span>Welcome.html</span>
+                </div>
+                <div class="file-item" data-file="example.js">
+                    <span>📜</span>
+                    <span>example.js</span>
+                </div>
+                <div class="file-item" data-file="style.css">
+                    <span>🎨</span>
+                    <span>style.css</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="editor-section">
+            <div class="tab-bar">
+                <div class="tab active" data-file="welcome.html">
+                    <span>🌟</span>
+                    <span>Welcome.html</span>
+                    <div class="tab-close">×</div>
+                </div>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor" id="editor"></div>
+            </div>
+
+            <div class="status-bar">
+                <div>
+                    <span id="cursorPos">Ln 1, Col 1</span> | 
+                    <span id="language">HTML</span> | 
+                    <span id="encoding">UTF-8</span>
+                </div>
+                <div>
+                    <span id="wordCount">0 words</span> | 
+                    <span>JWS.code Enhanced</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application State
+        let editor;
+        let currentTheme = 'vs';
+        let files = {
+            'welcome.html': `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to JWS.code Enhanced</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ffd700 0%, #f4d03f 25%, #ffffff 50%, #c0c0c0 75%, #a8a8a8 100%);
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            color: #2d3748;
+        }
+        .welcome {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.25);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            text-align: center;
+        }
+        h1 { color: #b8860b; margin-bottom: 2rem; }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .feature {
+            text-align: center;
+            padding: 1.5rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 215, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="welcome">
+        <h1>🌟 Welcome to JWS.code Enhanced</h1>
+        <p><strong>Professional Code Editor with Silver & Gold Theme</strong></p>
+        <p>Now available as an open-source web application!</p>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🎨</div>
+                <h4>Beautiful Theme</h4>
+                <p>Silver & Gold aesthetic design</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h4>Monaco Editor</h4>
+                <p>VS Code-like experience in browser</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🌍</div>
+                <h4>Web-Based</h4>
+                <p>No installation required</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🔓</div>
+                <h4>Open Source</h4>
+                <p>MIT License, contribute on GitHub</p>
+            </div>
+        </div>
+        
+        <p style="margin-top: 2rem; font-style: italic; color: #718096;">
+            🚀 <strong>Quick Start:</strong> Create a new file or open existing files to begin coding!
+        </p>
+        
+        <div style="margin-top: 2rem;">
+            <a href="https://github.com/yourusername/jws-code-enhanced" 
+               style="display: inline-block; background: linear-gradient(135deg, #ffd700, #d4af37); 
+                      color: #2d3748; padding: 0.8rem 1.5rem; text-decoration: none; 
+                      border-radius: 8px; font-weight: 600; margin: 0.5rem;">
+                ⭐ Star on GitHub
+            </a>
+            <a href="https://github.com/yourusername/jws-code-enhanced/issues" 
+               style="display: inline-block; background: linear-gradient(135deg, #c0c0c0, #a8a8a8); 
+                      color: #2d3748; padding: 0.8rem 1.5rem; text-decoration: none; 
+                      border-radius: 8px; font-weight: 600; margin: 0.5rem;">
+                🐛 Report Issues
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        console.log('🌟 Welcome to JWS.code Enhanced!');
+        console.log('⭐ Star us on GitHub: https://github.com/yourusername/jws-code-enhanced');
+    </script>
+</body>
+</html>`,
+            'example.js': `// 🌟 JWS.code Enhanced - Example JavaScript File
+// Professional Code Editor with Silver & Gold Theme
+
+// Welcome to JWS.code Enhanced!
+console.log('🚀 Welcome to JWS.code Enhanced!');
+
+// Example: Modern JavaScript Features
+class CodeEditor {
+    constructor(name, theme = 'silver-gold') {
+        this.name = name;
+        this.theme = theme;
+        this.files = new Map();
+        this.activeFile = null;
+    }
+
+    // Create a new file
+    createFile(fileName, content = '') {
+        this.files.set(fileName, {
+            content,
+            language: this.detectLanguage(fileName),
+            lastModified: new Date(),
+            isModified: false
+        });
+        
+        console.log(\`📄 Created file: \${fileName}\`);
+        return this.files.get(fileName);
+    }
+
+    // Open existing file
+    openFile(fileName) {
+        if (this.files.has(fileName)) {
+            this.activeFile = fileName;
+            console.log(\`📂 Opened file: \${fileName}\`);
+            return this.files.get(fileName);
+        }
+        
+        console.warn(\`⚠️ File not found: \${fileName}\`);
+        return null;
+    }
+
+    // Save file
+    saveFile(fileName, content) {
+        if (this.files.has(fileName)) {
+            const file = this.files.get(fileName);
+            file.content = content;
+            file.lastModified = new Date();
+            file.isModified = false;
+            
+            console.log(\`💾 Saved file: \${fileName}\`);
+            return true;
+        }
+        
+        return false;
+    }
+
+    // Detect language from file extension
+    detectLanguage(fileName) {
+        const extension = fileName.split('.').pop().toLowerCase();
+        const languageMap = {
+            'js': 'javascript',
+            'ts': 'typescript',
+            'html': 'html',
+            'css': 'css',
+            'json': 'json',
+            'md': 'markdown',
+            'py': 'python',
+            'jsx': 'javascriptreact',
+            'tsx': 'typescriptreact'
+        };
+        
+        return languageMap[extension] || 'plaintext';
+    }
+
+    // Get file statistics
+    getStats() {
+        return {
+            totalFiles: this.files.size,
+            activeFile: this.activeFile,
+            theme: this.theme,
+            lastActivity: new Date()
+        };
+    }
+}
+
+// Example usage
+const editor = new CodeEditor('JWS.code Enhanced');
+
+// Create some example files
+editor.createFile('welcome.html', '<h1>Welcome to JWS.code!</h1>');
+editor.createFile('styles.css', 'body { font-family: Arial, sans-serif; }');
+editor.createFile('app.js', 'console.log("Hello, World!");');
+
+// Open a file
+editor.openFile('welcome.html');
+
+// Display statistics
+console.log('📊 Editor Statistics:', editor.getStats());
+
+// Advanced Example: Async file operations
+async function processFiles(editor) {
+    try {
+        const files = Array.from(editor.files.keys());
+        
+        for (const fileName of files) {
+            console.log(\`🔄 Processing: \${fileName}\`);
+            
+            // Simulate processing delay
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            console.log(\`✅ Processed: \${fileName}\`);
+        }
+        
+        console.log('🎉 All files processed successfully!');
+    } catch (error) {
+        console.error('❌ Error processing files:', error);
+    }
+}
+
+// Run the async example
+processFiles(editor);
+
+// Modern JavaScript features demonstration
+const features = [
+    'Monaco Editor Integration',
+    'Real-time Syntax Highlighting', 
+    'Multi-language Support',
+    'Beautiful Silver & Gold Theme',
+    'Responsive Design',
+    'GitHub Pages Deployment'
+];
+
+console.log('✨ JWS.code Enhanced Features:');
+features.forEach((feature, index) => {
+    console.log(\`\${index + 1}. \${feature}\`);
+});
+
+// Export for use in other modules
+export { CodeEditor };
+export default editor;`,
+            'style.css': `/* 🎨 JWS.code Enhanced - Beautiful Silver & Gold Theme */
+/* Professional Code Editor Styling */
+
+:root {
+    /* Gold & Silver Color Palette */
+    --gold-primary: #ffd700;
+    --gold-secondary: #d4af37;
+    --gold-dark: #b8860b;
+    --silver-light: #f8f9fa;
+    --silver-medium: #c0c0c0;
+    --silver-dark: #a8a8a8;
+    
+    /* Gradients */
+    --gradient-gold: linear-gradient(135deg, #ffd700 0%, #d4af37 50%, #b8860b 100%);
+    --gradient-silver: linear-gradient(135deg, #f8f9fa 0%, #c0c0c0 50%, #a8a8a8 100%);
+    --gradient-overlay: linear-gradient(135deg, #ffffff 0%, #ffd700 10%, #ffffff 50%, #c0c0c0 90%, #ffffff 100%);
+    
+    /* Text Colors */
+    --text-primary: #2d3748;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    --text-white: #ffffff;
+    
+    /* Shadows */
+    --shadow-gold: 0 4px 20px rgba(255, 215, 0, 0.4);
+    --shadow-silver: 0 2px 12px rgba(192, 192, 192, 0.3);
+    --shadow-subtle: 0 1px 6px rgba(212, 175, 55, 0.15);
+    
+    /* Borders */
+    --border-gold: 2px solid var(--gold-secondary);
+    --border-silver: 1px solid var(--silver-medium);
+    --border-radius: 8px;
+}
+
+/* Reset and Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+    background: var(--gradient-overlay);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Beautiful Headers */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+
+/* Links */
+a {
+    color: var(--gold-dark);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--gold-primary);
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: var(--gradient-gold);
+    color: var(--text-primary);
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 215, 0, 0.5);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--gradient-silver);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-silver);
+}
+
+/* Cards */
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    border: var(--border-gold);
+    border-radius: calc(var(--border-radius) * 2);
+    padding: 2rem;
+    box-shadow: var(--shadow-gold);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 35px rgba(255, 215, 0, 0.3);
+}
+
+/* Grid Layouts */
+.grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+/* Feature Highlights */
+.feature {
+    text-align: center;
+    padding: 2rem;
+    border: var(--border-silver);
+    border-radius: var(--border-radius);
+    background: rgba(255, 215, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.feature:hover {
+    border-color: var(--gold-secondary);
+    background: rgba(255, 215, 0, 0.1);
+    transform: translateY(-3px);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+/* Code Blocks */
+code {
+    background: rgba(212, 175, 55, 0.1);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    color: var(--gold-dark);
+    font-weight: 600;
+}
+
+pre {
+    background: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    overflow-x: auto;
+    border-left: 4px solid var(--gold-primary);
+    box-shadow: var(--shadow-subtle);
+}
+
+pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.4), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    
+    .card {
+        padding: 1.5rem;
+    }
+    
+    .btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-primary: #e2e8f0;
+        --text-secondary: #cbd5e0;
+        --text-muted: #a0aec0;
+    }
+    
+    body {
+        background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #4a5568 100%);
+    }
+    
+    .card {
+        background: rgba(45, 55, 72, 0.95);
+        border-color: var(--gold-secondary);
+        color: var(--text-primary);
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .card {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+    }
+    
+    .btn {
+        display: none !important;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus styles for keyboard navigation */
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 2px solid var(--gold-primary);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --gold-primary: #ffff00;
+        --gold-secondary: #cc9900;
+        --gold-dark: #996600;
+        --text-primary: #000000;
+        --text-secondary: #333333;
+    }
+}`
+        };
+
+        // Initialize Monaco Editor
+        function initializeEditor() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            
+            require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.44.0/min/vs' } });
+            require(['vs/editor/editor.main'], function () {
+                // Create custom theme
+                monaco.editor.defineTheme('silver-gold', {
+                    base: 'vs',
+                    inherit: true,
+                    rules: [
+                        { token: 'comment', foreground: '718096', fontStyle: 'italic' },
+                        { token: 'keyword', foreground: 'b8860b', fontStyle: 'bold' },
+                        { token: 'string', foreground: '38a169' },
+                        { token: 'number', foreground: '3182ce' },
+                        { token: 'function', foreground: 'd4af37', fontStyle: 'bold' }
+                    ],
+                    colors: {
+                        'editor.background': '#fefefe',
+                        'editor.foreground': '#2d3748',
+                        'editor.lineHighlightBackground': '#ffd70015',
+                        'editor.selectionBackground': '#d4af3740',
+                        'editorCursor.foreground': '#d4af37',
+                        'editorLineNumber.foreground': '#718096'
+                    }
+                });
+
+                editor = monaco.editor.create(document.getElementById('editor'), {
+                    value: files['welcome.html'],
+                    language: 'html',
+                    theme: 'silver-gold',
+                    fontSize: 14,
+                    wordWrap: 'on',
+                    minimap: { enabled: true },
+                    automaticLayout: true,
+                    scrollBeyondLastLine: false,
+                    renderWhitespace: 'selection',
+                    folding: true,
+                    lineNumbers: 'on',
+                    tabSize: 2
+                });
+
+                setupEventListeners();
+                updateStatus();
+                hideLoadingScreen();
+                showNotification('🌟 JWS.code Enhanced loaded successfully!', 'success');
+            });
+        }
+
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            loadingScreen.classList.add('hidden');
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500);
+        }
+
+        function setupEventListeners() {
+            // File operations
+            document.getElementById('newFile').addEventListener('click', createNewFile);
+            document.getElementById('openFile').addEventListener('click', openFile);
+            document.getElementById('saveFile').addEventListener('click', saveFile);
+            document.getElementById('formatCode').addEventListener('click', formatCode);
+            
+            // Theme selector
+            document.getElementById('themeSelect').addEventListener('change', changeTheme);
+            
+            // File list
+            document.getElementById('fileList').addEventListener('click', handleFileClick);
+            
+            // Editor events
+            editor.onDidChangeModelContent(updateStatus);
+            editor.onDidChangeCursorPosition(updateCursorPosition);
+        }
+
+        function createNewFile() {
+            const fileName = prompt('Enter file name:', 'untitled.txt');
+            if (fileName) {
+                files[fileName] = '';
+                addFileToList(fileName);
+                openFileInEditor(fileName);
+                showNotification(\`📄 Created \${fileName}\`, 'success');
+            }
+        }
+
+        function openFile() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.html,.css,.js,.json,.txt,.md';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        files[file.name] = e.target.result;
+                        addFileToList(file.name);
+                        openFileInEditor(file.name);
+                        showNotification(\`📂 Opened \${file.name}\`, 'success');
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        function saveFile() {
+            const fileName = getCurrentFileName();
+            if (fileName && editor) {
+                const content = editor.getValue();
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                a.click();
+                URL.revokeObjectURL(url);
+                showNotification(\`💾 Saved \${fileName}\`, 'success');
+            }
+        }
+
+        function formatCode() {
+            if (editor) {
+                editor.getAction('editor.action.formatDocument').run();
+                showNotification('🎨 Code formatted', 'success');
+            }
+        }
+
+        function changeTheme(e) {
+            const theme = e.target.value;
+            if (editor) {
+                monaco.editor.setTheme(theme === 'vs' ? 'silver-gold' : theme);
+                showNotification(\`🎨 Theme changed to \${theme}\`, 'info');
+            }
+        }
+
+        function handleFileClick(e) {
+            const fileItem = e.target.closest('.file-item');
+            if (fileItem) {
+                const fileName = fileItem.dataset.file;
+                openFileInEditor(fileName);
+                
+                // Update active state
+                document.querySelectorAll('.file-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                fileItem.classList.add('active');
+            }
+        }
+
+        function openFileInEditor(fileName) {
+            if (files[fileName] !== undefined && editor) {
+                editor.setValue(files[fileName]);
+                const language = getLanguageFromFileName(fileName);
+                monaco.editor.setModelLanguage(editor.getModel(), language);
+                updateActiveTab(fileName);
+                updateStatus();
+            }
+        }
+
+        function getLanguageFromFileName(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+            const languageMap = {
+                'html': 'html', 'htm': 'html',
+                'css': 'css', 'scss': 'scss', 'sass': 'sass',
+                'js': 'javascript', 'jsx': 'javascript',
+                'ts': 'typescript', 'tsx': 'typescript',
+                'json': 'json',
+                'md': 'markdown',
+                'py': 'python',
+                'txt': 'plaintext'
+            };
+            return languageMap[ext] || 'plaintext';
+        }
+
+        function addFileToList(fileName) {
+            const fileList = document.getElementById('fileList');
+            const existingItem = fileList.querySelector(\`[data-file="\${fileName}"]\`);
+            
+            if (!existingItem) {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.dataset.file = fileName;
+                
+                const icon = getFileIcon(fileName);
+                fileItem.innerHTML = \`
+                    <span>\${icon}</span>
+                    <span>\${fileName}</span>
+                \`;
+                
+                fileList.appendChild(fileItem);
+            }
+        }
+
+        function getFileIcon(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+            const iconMap = {
+                'html': '🌐', 'htm': '🌐',
+                'css': '🎨', 'scss': '🎨', 'sass': '🎨',
+                'js': '📜', 'jsx': '📜',
+                'ts': '📘', 'tsx': '📘',
+                'json': '📋',
+                'md': '📝',
+                'py': '🐍',
+                'txt': '📄'
+            };
+            return iconMap[ext] || '📄';
+        }
+
+        function updateActiveTab(fileName) {
+            const tabBar = document.querySelector('.tab-bar');
+            const existingTab = tabBar.querySelector(\`[data-file="\${fileName}"]\`);
+            
+            if (!existingTab) {
+                // Remove existing tabs for simplicity (single tab mode)
+                tabBar.innerHTML = \`
+                    <div class="tab active" data-file="\${fileName}">
+                        <span>\${getFileIcon(fileName)}</span>
+                        <span>\${fileName}</span>
+                        <div class="tab-close">×</div>
+                    </div>
+                \`;
+            }
+        }
+
+        function getCurrentFileName() {
+            const activeTab = document.querySelector('.tab.active');
+            return activeTab ? activeTab.dataset.file : 'untitled.txt';
+        }
+
+        function updateStatus() {
+            if (!editor) return;
+            
+            const model = editor.getModel();
+            const position = editor.getPosition();
+            
+            document.getElementById('cursorPos').textContent = \`Ln \${position.lineNumber}, Col \${position.column}\`;
+            document.getElementById('language').textContent = model.getLanguageId().toUpperCase();
+            
+            const wordCount = model.getValue().split(/\s+/).filter(word => word.length > 0).length;
+            document.getElementById('wordCount').textContent = \`\${wordCount} words\`;
+        }
+
+        function updateCursorPosition() {
+            if (!editor) return;
+            const position = editor.getPosition();
+            document.getElementById('cursorPos').textContent = \`Ln \${position.lineNumber}, Col \${position.column}\`;
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = \`notification \${type}\`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Initialize the application
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(initializeEditor, 1000);
+        });
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'n':
+                        e.preventDefault();
+                        createNewFile();
+                        break;
+                    case 'o':
+                        e.preventDefault();
+                        openFile();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        saveFile();
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

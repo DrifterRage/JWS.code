@@ -1,0 +1,67 @@
+{
+  "name": "jws-code-enhanced",
+  "version": "2.0.0",
+  "description": "Professional Code Editor with Silver & Gold Theme",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "dist": "electron-builder --publish=never",
+    "pack": "electron-builder --dir",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "author": {
+    "name": "Jonathan South",
+    "email": "your.email@example.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^24.6.4"
+  },
+  "dependencies": {
+    "dist": "^0.1.2",
+    "monaco-editor": "^0.44.0"
+  },
+  "build": {
+    "appId": "com.jonathansouth.jwscode",
+    "productName": "JWS.code Enhanced",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!dist/**/*",
+      "!node_modules/**/*",
+      "node_modules/monaco-editor/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "icon": "assets/icon.icns"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "keywords": [
+    "code-editor",
+    "electron",
+    "monaco-editor",
+    "development",
+    "ide"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/jws-code-enhanced"
+  }
+}

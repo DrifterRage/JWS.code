@@ -1,142 +1,357 @@
-# JWS.code
-Code Editing Software
-# 🌟 JWS.code Enhanced Edition
+# JWS.code - Professional Code Editor
 
-**A beautiful, professional code editor with Silver & Gold theme - now open source!**
+<div align="center">
+  <img src="assets/logo.png" alt="JWS.code Logo" width="128" height="128">
+  
+  **A modern, feature-rich code editor built with Electron and Monaco Editor**
+  
+  [![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/jwscode/jws-code-editor)
+  [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+  [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](https://github.com/jwscode/jws-code-editor/releases)
+</div>
 
-No installation required! Works directly in your browser.
+## ✨ Features
 
-### 🌟 **Beautiful Interface**
-- **Silver & Gold Theme** - Elegant, professional design
-- **Monaco Editor** - Same engine that powers VS Code
-- **Responsive Design** - Works on desktop, tablet, and mobile
-- **Smooth Animations** - Polished user experience
+### 🎨 **Modern Interface**
+- Beautiful dark/light themes with smooth animations
+- Responsive design that adapts to different screen sizes
+- Intuitive navigation with tabbed editing
+- Professional status bar with real-time information
 
-### 💻 **Powerful Editing**
-- **50+ Languages** - Syntax highlighting for all major languages
-- **IntelliSense** - Smart autocompletion and error detection
-- **Multi-cursor** - Edit multiple lines simultaneously
-- **Find & Replace** - Advanced search with regex support
-- **Code Formatting** - Auto-format your code beautifully
+### 📝 **Powerful Editor**
+- **Monaco Editor** - The same editor that powers VS Code
+- Syntax highlighting for 50+ programming languages
+- IntelliSense autocompletion and error detection
+- Multi-cursor editing and advanced search/replace
+- Code formatting and auto-indentation
+- Minimap for quick navigation
 
-### 🚀 **Modern Features**
-- **Live Preview** - Real-time HTML preview
-- **File Management** - Open, save, and manage multiple files
-- **Themes** - Multiple color schemes available
-- **Keyboard Shortcuts** - VS Code-like shortcuts
-- **No Installation** - Runs entirely in your browser
+### 🚀 **Live Preview**
+- Real-time HTML preview with instant updates
+- Device simulation (Mobile, Tablet, Desktop)
+- Console output monitoring
+- Auto-refresh on file changes
+- External browser integration
+
+### 📁 **Project Management**
+- File explorer with tree view
+- Recent projects tracking
+- Project templates (React, HTML5, Express, etc.)
+- ZIP export functionality
+- Folder-based project organization
+
+### 🔧 **Developer Tools**
+- Global search across project files
+- Customizable settings and preferences
+- Keyboard shortcuts and menu integration
+- Plugin-ready architecture
+- Auto-save functionality
+
+### 🔒 **Security**
+- Password-protected access
+- Sandboxed renderer processes
+- Context isolation for enhanced security
+- No remote module access
 
 ## 🚀 Quick Start
 
-### Option 1: Use Online (Recommended)
-Start coding immediately!
+### Prerequisites
+- **Node.js** (v18.0.0 or higher)
+- **npm** (v9.0.0 or higher)
+- **Windows 10/11**, **macOS 10.14+**, or **Linux** (Ubuntu 18.04+)
 
-### ⌨️ Keyboard Shortcuts
-| Action | Shortcut |
-|--------|----------|
-| New File | `Ctrl+N` |
-| Open File | `Ctrl+O` |
-| Save File | `Ctrl+S` |
-| Find | `Ctrl+F` |
-| Replace | `Ctrl+H` |
-| Format Code | `Shift+Alt+F` |
-| Toggle Sidebar | `Ctrl+B` |
-| Command Palette | `Ctrl+Shift+P` |
+### Installation
 
-### 🎨 Customization
-- **Themes**: Switch between Light, Dark, and High Contrast
-- **Font Size**: Adjust from 10px to 24px
-- **Layout**: Toggle sidebar, minimap, and line numbers
-- **Languages**: Auto-detection or manual selection
+#### Option 1: Download Pre-built Binaries
+1. Visit the [Releases page](https://github.com/jwscode/jws-code-editor/releases)
+2. Download the appropriate installer for your platform:
+   - **Windows**: `JWS.code Setup 2.0.0.exe`
+   - **macOS**: `JWS.code-2.0.0.dmg`
+   - **Linux**: `JWS.code-2.0.0.AppImage`
+3. Run the installer and follow the setup wizard
+
+#### Option 2: Build from Source
+```bash
+# Clone the repository
+git clone https://github.com/jwscode/jws-code-editor.git
+cd jws-code-editor
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Or build for production
+npm run build
+```
+
+## 🔑 Access Codes
+
+The application is protected by access codes. Use any of the following:
+- `tworoadsdayz` (default)
+- `jwscode2024`
+- `developer123`
+
+## 📖 Usage Guide
+
+### First Launch
+1. **Login**: Enter one of the access codes to unlock the editor
+2. **Welcome Screen**: You'll see a welcome tab with basic HTML content
+3. **Open Project**: Use `File > Open Folder` to open your project directory
+
+### Creating Your First Project
+1. **Open Folder**: Choose or create a new folder for your project
+2. **New File**: Click the `+` button or use `Ctrl+N` to create a new file
+3. **Choose Template**: Use `Project > New from Template` for quick starts
+4. **Start Coding**: Begin writing your code with full syntax highlighting
+
+### Live Preview
+1. **HTML Files**: Automatically detected and previewed in the right panel
+2. **Device Testing**: Use the device selector to test different screen sizes
+3. **Live Reload**: Changes are reflected instantly in the preview
+4. **Console**: Monitor JavaScript console output in the preview panel
+
+### Project Templates
+
+#### 🌐 Basic Website
+- `index.html` with modern HTML5 structure
+- `style.css` with responsive design patterns
+- `script.js` with modern JavaScript features
+
+#### ⚛️ React App
+- Functional component with hooks
+- Modern React patterns and best practices
+- CSS modules ready
+
+#### 📄 Landing Page
+- Professional landing page template
+- Mobile-responsive design
+- Modern CSS Grid and Flexbox
+
+#### 📊 Dashboard
+- Admin dashboard layout
+- Data visualization ready
+- Component-based structure
+
+## ⌨️ Keyboard Shortcuts
+
+| Action | Windows/Linux | macOS |
+|--------|---------------|-------|
+| New File | `Ctrl+N` | `Cmd+N` |
+| Open File | `Ctrl+O` | `Cmd+O` |
+| Open Folder | `Ctrl+Shift+O` | `Cmd+Shift+O` |
+| Save | `Ctrl+S` | `Cmd+S` |
+| Save As | `Ctrl+Shift+S` | `Cmd+Shift+S` |
+| Find | `Ctrl+F` | `Cmd+F` |
+| Replace | `Ctrl+H` | `Cmd+H` |
+| Toggle Sidebar | `Ctrl+B` | `Cmd+B` |
+| Toggle Preview | `Ctrl+Shift+V` | `Cmd+Shift+V` |
+| Settings | `Ctrl+,` | `Cmd+,` |
+| Close Tab | `Ctrl+W` | `Cmd+W` |
+| Command Palette | `Ctrl+P` | `Cmd+P` |
+
+## ⚙️ Settings & Customization
+
+### Editor Settings
+- **Theme**: Dark, Light, High Contrast
+- **Font Size**: 10px - 24px
+- **Tab Size**: 2, 4, 8 spaces
+- **Word Wrap**: Enable/disable text wrapping
+- **Line Numbers**: Show/hide line numbers
+- **Minimap**: Toggle code minimap
+- **Auto Save**: Automatic file saving
+
+### Preview Settings
+- **Live Reload**: Toggle automatic preview updates
+- **Device Simulation**: Mobile, Tablet, Desktop views
+- **Console Monitoring**: Show/hide console output
+
+### Project Settings
+- **Recent Projects**: Access up to 10 recent projects
+- **Auto-open**: Restore last opened project on startup
+- **File Associations**: Default file type handling
+
+## 🔌 Extensibility
+
+JWS.code is built with extensibility in mind:
+
+### Custom Themes
+Add your own themes by modifying the CSS variables:
+```css
+:root {
+  --bg-primary: #your-color;
+  --text-primary: #your-color;
+  --accent-primary: #your-color;
+}
+```
+
+### Language Support
+Monaco Editor supports 50+ languages out of the box. Additional language support can be added via Monaco's language services.
+
+### Templates
+Create custom project templates by adding them to the templates directory:
+```javascript
+// custom-template.js
+module.exports = {
+  name: "My Template",
+  description: "Custom project template",
+  files: [
+    {
+      name: "index.html",
+      content: "<!-- Your template content -->"
+    }
+  ]
+};
+```
 
 ## 🛠️ Development
 
 ### Project Structure
 ```
-jws-code-enhanced/
-├── 📁 web/                 # Web version (GitHub Pages)
-│   ├── index.html          # Main web interface
-│   ├── css/               
-│   │   └── style.css       # Styling
-│   ├── js/
-│   │   ├── editor.js       # Monaco editor setup
-│   │   └── app.js          # Main application logic
-│   └── assets/             # Images, icons, etc.
-├── 📁 electron/            # Desktop version
-│   ├── main.js             # Electron main process
-│   ├── renderer/           # Renderer processes
-│   └── preload/            # Preload scripts
-├── 📁 docs/                # Documentation
-├── package.json            # Dependencies
-├── README.md               # This file
-└── LICENSE                 # MIT License
+jws-code-editor/
+├── main.js              # Main Electron process
+├── preload/             # Preload scripts
+│   ├── preload_login.js
+│   └── preload_editor.js
+├── renderer/            # Renderer scripts
+│   └── editor.js
+├── assets/              # Static assets
+├── build/               # Build configuration
+├── templates/           # Project templates
+└── dist/                # Build output
 ```
 
-### 🔧 Contributing
+### Building for Different Platforms
 
-We welcome contributions! Here's how to get started:
+```bash
+# Windows
+npm run build:win
 
-### Version 2.1 (Next Release)
-- [ ] **Plugin System** - Custom extensions
-- [ ] **Themes Gallery** - Community themes
-- [ ] **File Explorer** - Enhanced project navigation
-- [ ] **Split Panes** - Multiple editors
+# macOS
+npm run build:mac
 
-### Version 2.2 (Future)
-- [ ] **Collaborative Editing** - Real-time collaboration
-- [ ] **Git Integration** - Version control
-- [ ] **Terminal** - Integrated command line
-- [ ] **Mobile App** - iOS/Android versions
+# Linux
+npm run build:linux
 
-### Version 3.0 (Vision)
-- [ ] **AI Code Assistant** - Smart suggestions
-- [ ] **Cloud Sync** - Save across devices
-- [ ] **Team Workspaces** - Shared projects
-- [ ] **Advanced Debugging** - Full IDE features
+# All platforms
+npm run build
+```
 
-## 📊 Browser Support
+### Development Scripts
 
-| Browser | Version | Status |
-|---------|---------|---------|
-| Chrome | 70+ | ✅ Fully Supported |
-| Firefox | 65+ | ✅ Fully Supported |
-| Safari | 12+ | ✅ Fully Supported |
-| Edge | 79+ | ✅ Fully Supported |
-| Opera | 57+ | ✅ Fully Supported |
+```bash
+# Start in development mode
+npm run dev
 
-## 🏆 Why JWS.code Enhanced?
+# Run tests
+npm test
 
-### 🎨 **Beautiful by Design**
-- Carefully crafted Silver & Gold theme
-- Smooth animations and transitions
-- Professional, modern interface
+# Lint code
+npm run lint
 
-### ⚡ **Lightning Fast**
-- Instant startup in browser
-- No downloads or installations
-- Monaco Editor performance
+# Clean build directory
+npm run clean
+```
 
-### 🔓 **Truly Open Source**
-- MIT License - use anywhere
-- Community-driven development
-- Transparent and accessible
+## 🐛 Troubleshooting
 
-### 🌍 **Accessible Everywhere**
-- Works on any device with a browser
-- No platform restrictions
-- Always up-to-date
+### Common Issues
+
+#### App Won't Start
+- Ensure Node.js and npm are properly installed
+- Try deleting `node_modules` and running `npm install` again
+- Check for antivirus software blocking the application
+
+#### Files Won't Open
+- Verify file permissions in the target directory
+- Check if the file is already open in another application
+- Ensure the file encoding is UTF-8
+
+#### Preview Not Working
+- Check if the HTML file has valid syntax
+- Verify that relative paths to CSS/JS files are correct
+- Clear browser cache in the preview panel
+
+#### Performance Issues
+- Close unused tabs to free up memory
+- Disable minimap for large files
+- Reduce font size if experiencing lag
+
+### Getting Help
+
+1. **Documentation**: Check this README and inline help
+2. **Issues**: [Report bugs](https://github.com/jwscode/jws-code-editor/issues) on GitHub
+3. **Discussions**: Join the [community discussions](https://github.com/jwscode/jws-code-editor/discussions)
+4. **Email**: Contact [support@jwscode.dev](mailto:support@jwscode.dev)
+
+## 🤝 Contributing
+
+We welcome contributions from the community! Here's how you can help:
+
+### Reporting Bugs
+1. Check existing issues to avoid duplicates
+2. Use the bug report template
+3. Include steps to reproduce the issue
+4. Provide system information and screenshots
+
+### Suggesting Features
+1. Check the roadmap for planned features
+2. Use the feature request template
+3. Explain the use case and benefits
+4. Provide mockups or examples if possible
+
+### Code Contributions
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+- Follow the existing code style
+- Add tests for new features
+- Update documentation as needed
+- Use meaningful commit messages
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- **Monaco Editor** - Microsoft's powerful editor engine
-- **VS Code** - Inspiration for features and shortcuts
-- **Open Source Community** - For making this possible
+- **Monaco Editor** - Microsoft's powerful code editor
+- **Electron** - Cross-platform desktop app framework
+- **Contributors** - All the amazing people who help improve JWS.code
 
+## 🗺️ Roadmap
 
-**⭐ If you like JWS.code Enhanced, please give it a star! ⭐**
+### Version 2.1.0 (Q2 2024)
+- [ ] Plugin system for extensions
+- [ ] Integrated terminal
+- [ ] Git integration
+- [ ] Code snippets manager
 
-Made with ❤️ by Jonathan South
+### Version 2.2.0 (Q3 2024)
+- [ ] Collaborative editing
+- [ ] Cloud sync
+- [ ] Mobile companion app
+- [ ] Advanced debugging tools
+
+### Version 3.0.0 (Q4 2024)
+- [ ] AI-powered code completion
+- [ ] Visual form builder
+- [ ] Database integration
+- [ ] Performance monitoring
+
+---
+
+<div align="center">
+  <p>Made with ❤️ by <strong>Jonathan South</strong></p>
+  <p>
+    <a href="https://jwscode.dev">Website</a> •
+    <a href="https://github.com/jwscode">GitHub</a> •
+    <a href="https://twitter.com/jwscode">Twitter</a> •
+    <a href="mailto:hello@jwscode.dev">Email</a>
+  </p>
+</div>

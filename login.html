@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWS.code Enhanced - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, 
+                #ffd700 0%,
+                #f4d03f 15%,
+                #ffffff 25%,
+                #c0c0c0 35%,
+                #ffffff 50%,
+                #ffd700 65%,
+                #d4af37 75%,
+                #ffffff 85%,
+                #b8860b 100%
+            );
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.8), rgba(255, 215, 0, 0.2));
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .login-container {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.95) 0%,
+                rgba(255, 215, 0, 0.1) 20%,
+                rgba(255, 255, 255, 0.98) 40%,
+                rgba(192, 192, 192, 0.15) 60%,
+                rgba(255, 255, 255, 0.95) 80%,
+                rgba(255, 215, 0, 0.1) 100%
+            );
+            backdrop-filter: blur(20px);
+            border: 3px solid;
+            border-image: linear-gradient(45deg, #ffd700, #d4af37, #c0c0c0, #ffd700) 1;
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 
+                0 25px 50px rgba(212, 175, 55, 0.4),
+                0 15px 35px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            text-align: center;
+            max-width: 480px;
+            width: 90vw;
+            z-index: 10;
+            position: relative;
+            animation: slideInFromTop 0.8s ease-out;
+        }
+
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .logo-container {
+            margin-bottom: 2rem;
+            animation: logoGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            from {
+                filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+            }
+            to {
+                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+            }
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ffd700 0%, #d4af37 50%, #b8860b 100%);
+            border-radius: 20px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shine 2s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        }
+
+        .logo svg {
+            width: 40px;
+            height: 40px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .app-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #d4af37, #b8860b, #ffd700, #c0c0c0);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: titleShimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes titleShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .app-subtitle {
+            font-size: 1.2rem;
+            color: #4a5568;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #d4af37);
+            color: #2d3748;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .login-form {
+            margin-bottom: 2rem;
+        }
+
+        .access-code-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .access-code-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .access-code-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 215, 0, 0.05));
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .access-code-input:focus {
+            outline: none;
+            border-color: #d4af37;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 
+                0 0 0 3px rgba(212, 175, 55, 0.2),
+                inset 0 2px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .hint-text {
+            color: #718096;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .launch-button {
+            width: 100%;
+            padding: 1.2rem 2rem;
+            background: linear-gradient(135deg, #ffd700 0%, #d4af37 50%, #b8860b 100%);
+            color: #2d3748;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        .launch-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .launch-button:hover::before {
+            left: 100%;
+        }
+
+        .launch-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.5);
+        }
+
+        .launch-button:active {
+            transform: translateY(-1px);
+        }
+
+        .launch-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.7) 0%,
+                rgba(255, 215, 0, 0.1) 50%,
+                rgba(192, 192, 192, 0.1) 100%
+            );
+            border-radius: 16px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            border-color: #d4af37;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-desc {
+            font-size: 0.85rem;
+            color: #718096;
+            line-height: 1.4;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .footer-link {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .footer-link:hover {
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #718096;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-direction: column;
+        }
+
+        .loading-indicator {
+            display: none;
+            margin-left: 0.5rem;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #d4af37;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .app-title {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background particles -->
+    <div class="particles" id="particles"></div>
+
+    <div class="login-container">
+        <div class="logo-container">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <path d="M12 16L20 24L28 16" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h1 class="app-title">JWS.code Enhanced</h1>
+            <p class="app-subtitle">Professional Code Editor with Silver & Gold Theme</p>
+            <div class="version-badge">Version 2.0.0 Enhanced Edition</div>
+        </div>
+
+        <form class="login-form" onsubmit="launchEditor(event)">
+            <div class="access-code-group">
+                <label class="access-code-label">
+                    🔑 Access Code
+                </label>
+                <input 
+                    type="password" 
+                    class="access-code-input" 
+                    placeholder="Enter your access code..." 
+                    id="accessCode"
+                    maxlength="20"
+                >
+            </div>
+            
+            <div class="hint-text">
+                🔒 Enter your authorized access code to continue
+            </div>
+
+            <button type="submit" class="launch-button" id="launchBtn">
+                🚀 Launch Enhanced Editor
+                <div class="loading-indicator" id="loadingIndicator"></div>
+            </button>
+        </form>
+
+        <div class="features-grid">
+            <div class="feature-item">
+                <span class="feature-icon">🎨</span>
+                <div class="feature-title">Silver & Gold</div>
+                <div class="feature-desc">Beautiful Theme</div>
+            </div>
+            
+            <div class="feature-item">
+                <span class="feature-icon">🖱️</span>
+                <div class="feature-title">Drag & Drop</div>
+                <div class="feature-desc">Enhanced UX</div>
+            </div>
+            
+            <div class="feature-item">
+                <span class="feature-icon">⚡</span>
+                <div class="feature-title">Command Palette</div>
+                <div class="feature-desc">Quick Actions</div>
+            </div>
+            
+            <div class="feature-item">
+                <span class="feature-icon">🎯</span>
+                <div class="feature-title">Monaco Editor</div>
+                <div class="feature-desc">VS Code Power</div>
+            </div>
+        </div>
+
+        <div class="footer-links">
+            <div class="footer-link" onclick="showAbout()">
+                📖 About
+            </div>
+            <div class="footer-link" onclick="showHelp()">
+                ❓ Help
+            </div>
+            <div class="footer-link" onclick="showShortcuts()">
+                ⌨️ Shortcuts
+            </div>
+        </div>
+
+        <div class="copyright">
+            <div>© 2025 Jonathan South • Made with ❤️</div>
+            <div>🔧 Build: Enhanced Edition (production) • ⚡ Electron: 30.5.1</div>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 15;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = (Math.random() * 8 + 4) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Replace the launchEditor function in login.html with this:
+function launchEditor(event) {
+    event.preventDefault();
+    const accessCode = document.getElementById('accessCode').value;
+    
+    if (accessCode.trim() === '') {
+        alert('Please enter an access code');
+        return;
+    }
+    
+    console.log('🚀 Launching editor...');
+    
+    // Show loading state
+    const button = document.getElementById('launchBtn');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    button.innerHTML = '🚀 Launching...';
+    button.disabled = true;
+    loadingIndicator.style.display = 'inline-block';
+    
+    // Launch editor after short delay
+    setTimeout(() => {
+        try {
+            // Use the correct API from preload script
+            if (window.api && window.api.auth) {
+                console.log('✅ Using window.api.auth');
+                // For now, just send launch message directly
+                const { ipcRenderer } = require('electron');
+                ipcRenderer.send('launch-editor');
+            } else if (typeof require !== 'undefined') {
+                // Fallback to direct IPC if available
+                console.log('✅ Using direct ipcRenderer');
+                const { ipcRenderer } = require('electron');
+                ipcRenderer.send('launch-editor');
+            } else {
+                throw new Error('No IPC communication available');
+            }
+            
+            console.log('✅ Launch message sent successfully');
+        } catch (error) {
+            console.error('❌ Error launching editor:', error);
+            alert('Error launching editor: ' + error.message);
+            
+            // Reset button state
+            button.innerHTML = '🚀 Launch Enhanced Editor';
+            button.disabled = false;
+            loadingIndicator.style.display = 'none';
+        }
+    }, 1000);
+}
+
+        // Placeholder functions for footer links
+        function showAbout() {
+            alert('JWS.code Enhanced Edition v2.0.0\n\nA professional code editor with beautiful Silver & Gold theme.\n\nBuilt with Electron and Monaco Editor.\n\nFeatures:\n• Monaco Editor integration\n• File system access\n• Live preview\n• Command palette\n• Customizable themes');
+        }
+
+        function showHelp() {
+            alert('Help:\n\n• Enter any access code to launch the editor\n• Use Ctrl+N for new file\n• Use Ctrl+O to open files\n• Use Ctrl+S to save\n• Press F5 for live preview\n• F11 for fullscreen mode\n• Ctrl+Shift+P for command palette');
+        }
+
+        function showShortcuts() {
+            alert('Keyboard Shortcuts:\n\n• Ctrl+N - New File\n• Ctrl+O - Open File\n• Ctrl+Shift+O - Open Folder\n• Ctrl+S - Save File\n• Ctrl+Shift+S - Save As\n• F5 - Toggle Preview\n• F11 - Fullscreen\n• Ctrl+Shift+P - Command Palette\n• Ctrl+F - Find\n• Ctrl+H - Replace\n• Ctrl+B - Toggle Sidebar');
+        }
+
+        // Initialize particles when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🌟 Login screen loaded');
+            createParticles();
+            
+            // Focus on input field
+            const accessCodeInput = document.getElementById('accessCode');
+            if (accessCodeInput) {
+                accessCodeInput.focus();
+            }
+            
+            // Test Electron API availability
+            if (window.electronAPI) {
+                console.log('✅ Electron API is available');
+            } else if (typeof require !== 'undefined') {
+                console.log('✅ require() is available');
+            } else {
+                console.warn('⚠️ Neither electronAPI nor require() are available');
+            }
+        });
+
+        // Add some interactivity to the access code input
+        document.getElementById('accessCode').addEventListener('input', (e) => {
+            const value = e.target.value;
+            if (value.length > 0) {
+                e.target.style.borderColor = '#d4af37';
+                e.target.style.background = 'rgba(255, 255, 255, 0.95)';
+            } else {
+                e.target.style.borderColor = 'transparent';
+                e.target.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 215, 0, 0.05))';
+            }
+        });
+
+        // Allow Enter key to submit
+        document.getElementById('accessCode').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.querySelector('.launch-button').click();
+            }
+        });
+    </script>
+</body>
+</html>
